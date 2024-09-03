@@ -1,2 +1,5 @@
-# jour479x_fall_2023
-Template repository for Sports Data Analysis &amp; Visualization
+# jour479x_fall_2024
+install.packages(devtools)
+library(devtools)
+install_github("dwillis/SportsDataTutorials")
+
