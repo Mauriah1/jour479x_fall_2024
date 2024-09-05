@@ -5,6 +5,6 @@ library(tidyverse)
 matches_2023 <- read_csv("https://raw.githubusercontent.com/dwillis/NCAAWomensSoccerData/main/data/ncaa_womens_soccer_matchstats_2023.csv")
 ```
 ```{r}
-#Maryland Terps Soccer Team had 77 total on goals and only had 9 total goals for the season. Is the Maryland team really that bad, and how are they looking compared to other teams in the BIG 10? There on goal percentage is 0.12, and looks like they may be at the very low percentage for their conference, what does this say about the team in general? To me that they need some approvement and data story could specify what they are lacking and how they are preforming over the course of years. 
+# When you think of soccer, you would think the objective is to score right?Maryland Terps Soccer Team had 77 total on goals and only had 9 total goals for the season. Is the Maryland team really that bad, and how are they looking compared to other teams in the BIG 10? There on goal percentage is 0.12, and looks like they may be at the very low percentage for their conference, what does this say about the team in general? To me that they need some approvement and a data story could specify what they are lacking and how they are preforming over the course of years. 
 ```
 
