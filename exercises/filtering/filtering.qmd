@@ -140,7 +140,6 @@ players |>
 
 **ANSWER** Who do you get as the first result, and what was his trueshooting percentage?
 
-
 So is 100 minutes our level? Here's the truth -- there's not really an answer here. We're picking a cutoff. If you can cite a reason for it and defend it, then it probably works.
 
 ## Top list
@@ -175,10 +174,23 @@ matches_2023 |>
     percent = (total_on_goal/total_attempts)*100
   )
 ```
+
 Now it's your turn: do the same for the 2022 data. Load it from GitHub, then adapt the above code but add an additional filter to restrict the results to Maryland's first five games (the 5th game was on Sept. 4, 2022). You need to put the date value in quotes.
 
 ```{r}
+matches_2022 <- read_csv("https://raw.githubusercontent.com/dwillis/NCAAWomensSoccerData/main/data/ncaa_womens_soccer_matchstats_2022.csv")
+```
 
+```{r}
+matches_2022|> filter(team == 'Maryland Terrapins, Terps' & date <= '2022-09-04') |>
+  group_by(team) |>
+  summarise(
+    total_attempts = sum(sh_att),
+    total_on_goal = sum(so_g),
+    percent = (total_on_goal/total_attempts)*100
+  )
 ```
 
 **ANSWER** How do the two years compare?
+
+In 2023 with all the Women's soccer games included their total on goal number was higher than in 2022 but in 2022 with only the first 5 games calcuated there on goal percentage was higher. This showed to me 2 things that they either start off their season pretty high and fall off towards the end of the season, or the team in general is not working well together and may be getting worse and needs to make changes.
