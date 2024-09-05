@@ -138,7 +138,7 @@ players |>
   filter(Team == "Maryland Terrapins")
 ```
 
-**ANSWER** Who do you get as the first result, and what was his trueshooting percentage?
+**ANSWER** Who do you get as the first result, and what was his trueshooting percentage? Patrick and his trueshooting percentage was 63.86 %.
 
 So is 100 minutes our level? Here's the truth -- there's not really an answer here. We're picking a cutoff. If you can cite a reason for it and defend it, then it probably works.
 
