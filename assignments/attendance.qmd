@@ -17,7 +17,9 @@ Using the tidyverse's `pivot_longer` function, turn the currently wide data into
 ```{r}
 attendance_longer <- attendance |> pivot_longer(cols = starts_with("20"), names_to = "Year", values_to = "Attendance")
 
-attendance_longer |> filter(Attendance >= 500000)
+attendance_longer |> filter(Attendance >= 500000) |> 
+  group_by(Institution) |> summarise(Year = n()) |>
+  filter( Year < 5)
 
 ```
 
@@ -41,4 +43,20 @@ attendance_wide <- attendance_wide |> mutate(percent = (`2023`-`2019`)/`2019`*10
 
 Some of these clearly are influenced by performance on the field. Below, describe the most interesting results (positive or negative) and what you think might be going on with them. Feel free to do some googling and describe what other data would be helpful to clarify what the best stories here might be. What surprises you about these results?
 
-**ANSWER**
+**ANSWER: Kentucky had an 0.36% change from 2019 to 2023, so there attendance has roughly been the same. One thing I noticed is that The University of Kentucky is the the top power five school in their state, over Louisville. There are also no NFL Teams in Kentucky, so that can amount to why there attendance stays high and the same round about.**
+
+```{r}
+big_ten_with_wins <- read_csv("https://dwillis.github.io/sports-data-files/big_ten_no_2020.csv")
+```
+
+```{r}
+big_ten_with_wins <- big_ten_with_wins |>
+  group_by(Institution)|>
+  summarise( avg_attenance = mean(Attendance),
+             avg_wins = mean(Wins),
+            sd_attenance = sd(Attendance),
+            sd_wins = sd(Wins)
+  )
+  
+#I would write about Nebraska, I say this because they have a high average of attendance that is roughly around 600,000, but they only average roughly 5 wins a season. This to me would be a intresting story because it shows me that they have a dedicated fan base, who will show up even if their season is bad. 
+```
