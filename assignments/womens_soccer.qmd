@@ -3,14 +3,6 @@ title: "Women's Soccer Data"
 output: html_notebook
 ---
 
-```{r}
-
-```
-
-```{r}
-
-```
-
 We'll use this notebook to explore some NCAA women's soccer data and [our questions](https://docs.google.com/spreadsheets/d/1kTSrnl1URmcexIWLDMWqDnp3q-c2OS45uifnhjp10n4/edit#gid=0). First, let's load the tidyverse library:
 
 ```{r}
@@ -19,21 +11,25 @@ library(tidyverse)
 
 We'll want to start with 2023 match data, which is located in [this GitHub repository](https://github.com/dwillis/NCAAWomensSoccerData). We can load the match data directly from GitHub using `read_csv`:
 
-load data and add a total goal column 
+load data and add a total goal column
+
 ```{r}
 matches_2023<- matches_2023 <- read_csv("https://raw.githubusercontent.com/dwillis/NCAAWomensSoccerData/main/data/ncaa_womens_soccer_matchstats_2023.csv") |> mutate(total_goals = goals + defensive_goals)
 
 matches_2024<-matches_2024 <- read_csv("https://raw.githubusercontent.com/dwillis/NCAAWomensSoccerData/main/data/ncaa_womens_soccer_matchstats_2024.csv")|> mutate(total_goals = goals + defensive_goals)
 ```
+
 T-test for the Ncaa
+
 ```{r}
 result <- t.test(matches_2023$total_goals, matches_2024$total_goals, alternative= "two.sided", var.equal = TRUE)
 print(result)
 
-#Goals was up this year in 2024 compared to the year in 2024, The difference is statistically significant, meaning it’s unlikely to be due to random chance.  
+#Goals was up this year in 2024 compared to the year in 2023, The difference is statistically significant, meaning it’s unlikely to be due to random chance.  
 ```
 
-Maryland's T-test 
+Maryland's T-test
+
 ```{r}
 umd_total_goals23 <- matches_2023 |>
   filter(team == 'Maryland Terrapins, Terps') |> mutate(season=2023) 
@@ -102,20 +98,13 @@ matches_2024|>
   summarise(count = n ())
 ```
 
-```{r}
-
-```
-
-```         
-```
-
 4.  How many total corner kicks has Maryland had so far and how many have its opponents have? Calculate the difference between the two totals for every team. Maryland had 22 corner kicks and the total number of the opponents were 2611.
 
-``` r
-```{r} corner_kicks <- matches_2022|> filter(date < '2022-09-02') |> group_by(team) |> summarise(corners = sum(corners))|> mutate(corner_difference = corners/2633)
+```{r}
+corner_kicks <- matches_2022|> filter(date < '2022-09-02') |> group_by(team) |> summarise(corners = sum(corners))|> mutate(corner_difference = corners/2633)
 ```
 
-``` r
+```{r}
 matches_2024 <- read_csv("https://raw.githubusercontent.com/dwillis/NCAAWomensSoccerData/main/data/ncaa_womens_soccer_matchstats_2024.csv")
 ```
 
@@ -127,8 +116,39 @@ matches_2024 |>
              pct_goal_shots = so_g/sh_att)
 ```
 
+### Correlations
 
 ```{r}
+correlations <- read_csv("https://raw.githubusercontent.com/dwillis/NCAAWomensSoccerData/main/data/ncaa_womens_soccer_matchstats_2024.csv")
 
+```
+
+```{r}
+newcorrelations <- correlations |> 
+  mutate(
+    differential = goals - defensive_goals
+    )
+```
+
+```{r}
+newcorrelations |> summarise(correlation = cor(differential, fouls, method="pearson"))
+```
+
+```{r}
+newcorrelations |> summarise(correlation = cor(differential, yellow_cards, method="pearson"))
+```
+
+```{r}
+fit <- lm(differential ~ fouls, data = newcorrelations)
+summary(fit)
+```
+```{r}
+newcorrelations |> 
+  summarise(correlation = cor(differential, so_g, method="pearson"))
+```
+
+```{r}
+net <- lm(differential ~ so_g, data = newcorrelations)
+summary(net)
 ```
 
