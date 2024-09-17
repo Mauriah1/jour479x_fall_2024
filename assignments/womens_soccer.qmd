@@ -151,4 +151,4 @@ newcorrelations |>
 net <- lm(differential ~ so_g, data = newcorrelations)
 summary(net)
 ```
-
+### I would pitch a story about UMD's Soccer perfromace this yar by starting off like this... It has been no doubt that Maryland's Soccer Team has struggled throughout the year's to stand out, and there is no doubt in the soccer world that shots on goal affect the way soccer is played. However, is differntiatial (goals- defensive goal)  predicted by goalie saves, what is the correlatioin between the two? does goalies saves make a huge difference in Maryland's Games, and how are they compared to other teams? 
