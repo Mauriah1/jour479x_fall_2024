@@ -3,9 +3,8 @@ library(tidyverse)
 library(cfbfastR)
 ```
 
-
 ```{r}
-plays_2023 <- cfbd_pbp_data(2023)
+plays_2023 <- cfbd_pbp_data(2021)
 ```
 
 First-play problems: it appears that teams are inconsistent about how they define the first play. Many use the kickoff as the first play, while some do not.
@@ -13,3 +12,47 @@ First-play problems: it appears that teams are inconsistent about how they defin
 ```{r}
 plays_2023 |> filter(drive_number == 1, play_number == 1, play_type != 'Kickoff') |> distinct(home, play_type)
 ```
+
+```{r}
+logs <- read_csv("~/Desktop/jour479x_fall_2024/footballlogs1123.csv")
+```
+
+```{r}
+logs <- logs |> mutate(
+  Differential = TeamScore - OpponentScore)
+```
+
+```{r}
+penalties_to_score <-lm(Differential ~ Penalties, data=logs)
+summary(penalties_to_score)
+```
+
+The p-value is 0.005767, this means that p-value is very low and that it is statistically significant. However, the R-squared value of 0.0003204, suggests that only only .03% of the time will this model be correct. This shows that the regression is not very useful, it will shine some light on some matters but ultimately it is showing that other factors affect the score differential in a more significant matter.
+
+```{r}
+affecting_score <-lm(Differential ~ Penalties + Fumbles + Interceptions + PassingYds + RushingYds  + DefPenalties + DefFumbles + DefInterceptions + DefPassingYds + DefRushingYds , data=logs)
+summary(affecting_score)
+```
+
+My initial thoughts when thinking about what affects the Differential Score, I thought about passing and rushing yards, interceptions, fumbles and penalties. My result provided me a p-value that was \< 2.2e-16, which means it was statistically significant. The Adjusted R-squared was 80.3, which was a huge approvement from the one above. This showed to me that this model is more promising because its saying 80.3% of the time this model will be correct.
+
+```{r}
+close_games <- logs |>
+  mutate(Differential = TeamScore - OpponentScore) |>
+  filter(Differential > 0 & Differential <=7)
+```
+
+
+```{r}
+simple_model <- lm(Differential ~ Penalties, data = close_games)
+summary(simple_model)
+```
+
+```{r}
+multiple_model <- lm(Differential ~ Penalties + Fumbles + Interceptions + PassingYds + RushingYds  + DefPenalties + DefFumbles + DefInterceptions + DefPassingYds + DefRushingYds, data = close_games)
+summary(multiple_model)
+```
+My multiple model regression model produced a better r-squared value, which shows me that additional factors improves the explanation of point differential. My results say that the expression is statistically significant. However the low p-value or 3.88% shows that the factors I used didn't produce a promising enough statistic to trust the model. 
+
+
+What I have learned about penalties and point differential is that penalties have a notable impact on the scoring differential. If the p-value for penalties is significant, it suggests that penalties can indeed affect the game outcome, especially in tight contests.I believe that there is a story here if a reporter wants to cover how discipline a team has been or how penalties have affected a particular team.  
