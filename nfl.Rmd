@@ -1,0 +1,32 @@
+```{r}
+library(tidyverse)
+install.packages("nflfastR")
+library(nflfastR)
+```
+
+### Terry Mclaurin targets by half
+
+-   load the play-by-play data
+
+```{r}
+pbp_2022 <- read_rds("https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2022.rds")
+pbp_2023 <- read_rds("https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2023.rds")
+pbp_2024 <- read_rds("https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2024.rds")
+```
+
+```{r}
+pbp_2022 |> 
+  filter(receiver == 'T.McLaurin', game_half == 'Half1', play_type == 'pass', week < 4, posteam == 'WAS' )
+```
+#2023 
+```{r}
+pbp_2023 |> 
+  filter(receiver == 'T.McLaurin', game_half == 'Half1', play_type == 'pass', week < 4, posteam == 'WAS' )
+```
+
+#2024 
+```{r}
+pbp_2024 |> 
+  filter(receiver == 'T.McLaurin', game_half == 'Half1', play_type == 'pass', week < 4, posteam == 'WAS' )
+```
+### The post was correct that McLaurin had 6 catches in the first three games within the first half in 2022. In 2023 he had a slight improvement on touches, he had 12 catches within the first three games within the first half. This was a tad betteer but 12 catches from 3 games, is still not that great. Lastly, in 2024, Terry has caught 7 catches within the first half. This is showing me that he ultimately is not recieving the ball as much and is not doing as well as last season with his 12 catches. This is showing me that he needs the ball way more, if he is one of the highest paid receiver on the team he should be having more touches. 
