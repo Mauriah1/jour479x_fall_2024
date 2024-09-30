@@ -58,7 +58,7 @@ teamszscore |> filter(team == "Maryland")
 
 ```{r}
 ### analysis 
-
+###What is shown is that Maryland ranks very low compared to the other teams Z-Score analysis. From these games the top Z-score is 8, the Z-Score of Maryland best game was 3.7, according to these metrics. This shows, that the team needs some more in all these areas. Another team that looks like Maryland is Northern Arizona, Although they did have a good game that had a Z-score of 5, there other games reflect Maryland's as well. A story that could be here is the exploration of a team winning performance for example when Maryland does well in digs, assists, kills and aces does that account to winning? 
 
 ```
 
