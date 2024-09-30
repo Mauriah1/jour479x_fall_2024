@@ -1,0 +1,64 @@
+---
+title: "Volleyball"
+output: html_document
+date: "2024-09-30"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Volleyball Z-Scores Analysis
+
+```{r}
+library(tidyverse)
+```
+
+## load data 
+```{r}
+gamedata <- read_csv("https://raw.githubusercontent.com/dwillis/NCAAWomensVolleyballData/main/data/ncaa_womens_volleyball_matchstats_2024.csv")
+```
+
+## team averages 
+```{r}
+perset <- gamedata |> 
+  mutate(
+    digsperset= digs/s,
+    assistsperset= assists/s,
+    killsperset = kills/s,
+    acesperset = aces/s
+  ) |>
+  select(team, date, digsperset, assistsperset, acesperset, killsperset)
+```
+
+## Create a Z-Score 
+```{r}
+teamszscore <- perset |>
+  group_by(team) |> 
+  mutate(
+    killzscore = as.numeric(scale(killsperset, center = TRUE, scale = TRUE)),
+    digszscore = as.numeric(scale(digsperset, center = TRUE, scale = TRUE)),
+    assistszscore = as.numeric(scale(assistsperset, center = TRUE, scale = TRUE)), 
+    aceszscore = as.numeric(scale(acesperset, center = TRUE, scale = TRUE)),
+    TotalZscore =killzscore + digszscore + aceszscore + assistszscore
+  ) |> ungroup() 
+
+```
+
+## arrange 
+```{r}
+teamszscore |> arrange(desc(TotalZscore))
+
+```
+
+## finding maryland data 
+```{r}
+teamszscore |> filter(team == "Maryland")
+```
+
+```{r}
+### analysis 
+
+
+```
+
