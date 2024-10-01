@@ -65,7 +65,7 @@ teamszscore |> filter(team == "Maryland")
 ```{r}
 ## Arkansas Pine Bluff Volleyball team has had a awful start to their season with a record of 2-14, however they're still at the top of averages for the most in digs this season.
 
-## Arkansas Pine Bluff averages 25.75% in digs the most in the NCAA, however this stat doesn't necessarily determine if the team is good. Pine Bluff stats shows that they're primarily always on defense, a good factor to why there dig average is so high. In volleyball digs are important but to what degree? Arkansas Pine Bluff shows that one can get digs a lot because they are forced too, not just because it's apart of the game. When a team is constantly hammered by the team's offense, that can force the other team to have more digs. 
+## Arkansas Pine Bluff averages 25.75% in digs the most in the NCAA, however this stat doesn't necessarily determine if the team is good. Pine Bluff stats shows that they're primarily always put on defense, a good potential factor to why there dig average is so high. In volleyball digs are important but to what degree? Arkansas Pine Bluff shows that one can get digs a lot but because they are forced too, not just because it's apart of the game. When a team is constantly hammered by the team's offense, that can force the other team to have more digs. 
 
 #Just because Arkansas Pine Bluff could get digs were those good digs? and did this help them win? Looking at their offensive stats, their kill percentage is only 14.75%, which isn't high for a game that goes to 25. Arkansas Pine Bluff may be good in defense, but their offense is lacking and their record is a reflection of this. 
 ```
