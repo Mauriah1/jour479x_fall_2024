@@ -1,16 +1,48 @@
 ### The question I choose to explore further is weather you be short in volleyball and still succeeded, specifically in the position of a D.S. or a Libero. The data does exisit and I will be using the  years 2022-2023, I got it through my professors github. However, I will have to workthrough the data and create new data sets that focus soley on D.S.'s  or a Libero's positions. I will have to figure out the average height for all teams within these positions, then I would have tp see how that compares to there in game play. There is an example of this type of data story: https://towardsdatascience.com/does-height-really-matter-c3db062e8333, but it focuses on weather height matters in the means of offense, not within the means of defense and  passing position. 
 
+
+###load libraries 
 ```{r}
 library(tidyverse)
 ```
 
+###load data
 ```{r}
-matches23 <- read_csv("https://raw.githubusercontent.com/dwillis/NCAAWomensVolleyballData/main/data/ncaa_womens_volleyball_matchstats_2023.csv")
 
-matches22 <- read_csv("https://raw.githubusercontent.com/dwillis/NCAAWomensVolleyballData/main/data/ncaa_womens_volleyball_matchstats_2022.csv")
-
-rosters23 <- read_csv("https://raw.githubusercontent.com/Sports-Roster-Data/womens-volleyball/refs/heads/main/rosters_2023_cleaned.csv")
-
-roster22 <- read_csv("https://raw.githubusercontent.com/Sports-Roster-Data/womens-volleyball/refs/heads/main/rosters_2022.csv")
+player_stats <- read_csv("https://raw.githubusercontent.com/dwillis/NCAAWomensVolleyballData/refs/heads/main/data/ncaa_womens_volleyball_playerstats_2023.csv")
 ```
 
+### Make a new column for total_inches for height
+```{r}
+player_stats <- player_stats |> 
+  mutate(feet = as.numeric(feet), inches = as.numeric(inches)) %>%
+  mutate(total_inches = (feet*12)+inches)
+```
+
+
+
+### Seperating the D.S. & Libero Positions 
+```{r}
+teams_height <- player_stats |> group_by(team, pos) |> summarise(avg_height = mean(total_inches))
+
+DS_height <- teams_height |> filter(pos == "DS") 
+
+L_height <- teams_height |> filter(pos == "L")
+
+L_ds_height <- teams_height |> filter(pos == "L/DS")
+
+defensive_players_height <- inner_join(DS_height, L_height, by="team")
+
+defensive_players_heights<- inner_join(defensive_players_height,L_ds_height, by="team")
+
+
+```
+The issue I have right here is figuring out how to combine teams who have L, DS, and L/DS. The way I did works but it is leaving schools out who don't have all there in their descriptions. 
+
+###Plotting avg height of schools 
+```{r}
+ggplot() + 
+  geom_bar(data=defensive_players_heights, aes(x=reorder(team, avg_height), weight=avg_height)) +
+  coord_flip()
+```
+### Create metrics to test weather height matters 
