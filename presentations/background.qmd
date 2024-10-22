@@ -10,6 +10,8 @@ library(tidyverse)
 ```{r}
 
 player_stats <- read_csv("https://raw.githubusercontent.com/dwillis/NCAAWomensVolleyballData/refs/heads/main/data/ncaa_womens_volleyball_playerstats_2023.csv")
+
+logs <- read_csv("https://dwillis.github.io/sports-data-files/ncaa_womens_volleyball_matchstats_2023.csv")
 ```
 
 ### Make a new column for total_inches for height
@@ -23,26 +25,35 @@ player_stats <- player_stats |>
 
 ### Seperating the D.S. & Libero Positions 
 ```{r}
-teams_height <- player_stats |> group_by(team, pos) |> summarise(avg_height = mean(total_inches))
+ player_stats |> group_by(pos) |> summarise(count = n())
 
-DS_height <- teams_height |> filter(pos == "DS") 
+player_stats <- player_stats |> mutate(newpos = case_when(grepl("DS", pos) ~ "DS",
+                                          grepl("L", pos) ~ "L",
+                                          grepl("L/DS", pos) ~ "DS"))
 
-L_height <- teams_height |> filter(pos == "L")
-
-L_ds_height <- teams_height |> filter(pos == "L/DS")
-
-defensive_players_height <- inner_join(DS_height, L_height, by="team")
-
-defensive_players_heights<- inner_join(defensive_players_height,L_ds_height, by="team")
 
 
 ```
-The issue I have right here is figuring out how to combine teams who have L, DS, and L/DS. The way I did works but it is leaving schools out who don't have all there in their descriptions. 
-
-###Plotting avg height of schools 
+###Making a dataset that shows the average height for a DS, or L. and how many digs they have
 ```{r}
-ggplot() + 
-  geom_bar(data=defensive_players_heights, aes(x=reorder(team, avg_height), weight=avg_height)) +
-  coord_flip()
+avg_height <- player_stats|> filter(newpos == newpos) |> group_by(team, digs) |> summarise(avg_height = total_inches) 
+
+
 ```
-### Create metrics to test weather height matters 
+Looking at this data there are some crazy ouputs, the tallest recorded DS or L at 73 inches, only had a total of 9 digs!!!While the the smallest recorded D.S. or L at 59 inches, had a total of 89 digs.
+
+###Plotting avg_height compared to digs
+```{r}
+ggplot() + geom_point(data=avg_height, aes(x=avg_height, y=digs))
+```
+This shows me that to pass in the sport of volleyball, you don't have to be tall. There is no significant pattern that shows height plays a factor on being able to pass, the data is all over the place. 
+
+
+### Testing the model
+```{r}
+fit <- lm(digs ~ avg_height, data = avg_height)
+summary(fit)
+```
+The model identifies a substantial but modest link between average_height and digs.
+While the avg_height coefficient is significant at the 0.05 level, the extremely low R-squared value (0.0037) indicates that avg_height explains very little of the variance in digs, and other factors are likely to have a greater influence.
+
