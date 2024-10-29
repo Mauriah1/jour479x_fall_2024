@@ -23,12 +23,11 @@ player_stats <- read_csv("https://raw.githubusercontent.com/dwillis/NCAAWomensVo
 
 
 
-
 ```
 
 Exploratory Analysis:
 
-After getting my data, I had to clean some things up. I had to add a total height column to the data so I could use one set metric for a persons height. I also had to clean up the positions column, there were many different names for D.S. and Liberos in the dataset, I had to create a new position column so I could only have two positions listed.
+After getting my data, I had to clean some things up. I had to add a total height column to the data so I could use one set metric for a persons height. I also had to set metrics for players who had over 20 games and over 1 inch of height. I then had to clean up the positions column, there were many different names for D.S. and Liberos in the dataset, so I had to create a new position column so I could only have two positions listed.
 
 \*Making a new column for total_inches for height
 
