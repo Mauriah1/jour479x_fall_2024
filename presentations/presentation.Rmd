@@ -1,0 +1,134 @@
+The question I choose to explore further is weather you be short in volleyball and still succeeded, specifically in the position of a D.S. or a Libero.
+
+Volleyball is clearly a sport where height can matter. Especially in the offensive position, a taller player would have an advantage because they would have a higher reach that would be very beneficial to the offensive play. However for defense, does height really play a role in the same factors?
+
+Here's how I got to my answer :
+
+Data Collection: I started off by getting my data from my professors github, who got the data from the NCAA. I had to then load the libraries and data sets so that I could run code and view my data
+
+\*load libraries
+
+```{r}
+library(tidyverse)
+library(janitor)
+library(ggbeeswarm)
+library(ggrepel)
+
+set.seed(1234)
+```
+
+```{r}
+
+player_stats <- read_csv("https://raw.githubusercontent.com/dwillis/NCAAWomensVolleyballData/refs/heads/main/data/ncaa_womens_volleyball_playerstats_2023.csv")
+
+
+
+
+```
+
+Exploratory Analysis:
+
+After getting my data, I had to clean some things up. I had to add a total height column to the data so I could use one set metric for a persons height. I also had to clean up the positions column, there were many different names for D.S. and Liberos in the dataset, I had to create a new position column so I could only have two positions listed.
+
+\*Making a new column for total_inches for height
+
+```{r}
+player_stats <- player_stats |> 
+  mutate(feet = as.numeric(feet), inches = as.numeric(inches)) |>
+  mutate(total_inches = (feet*12)+inches)  
+  
+player_stats <- player_stats |> filter(total_inches > 1, gp > 20)
+```
+
+\*Separating D/S and L stats
+
+```{r}
+player_stats |> group_by(pos) |> summarise(count = n())
+
+player_stats <- player_stats |> mutate(newpos = case_when(grepl("DS", pos) ~ "DS",
+                                          grepl("L", pos) ~ "L",
+                                          grepl("L/DS", pos) ~ "DS"))
+
+```
+
+After this I could finally get to the part where I can answer my question, could you be short and still play volleyball in the D.S or Libero position? I had to first determine what would be my metric of success and in this project I used digs.
+
+```{r}
+avg_height <- player_stats|> filter(newpos == newpos) |> group_by(team, digs, full_name) |> summarise(avg_height = total_inches) 
+```
+
+```{r}
+ggplot() + geom_point(data=avg_height, aes(x=avg_height, y=digs)) + 
+  labs(
+    title="Height compared to Digs")
+```
+
+The average height for D.S and Liberos vary all over the NCAA, however they're both short and tall players who have a low count for digs and a high count of digs. This suggested to me that height does not matter in terms of playing in the Libero or D.S. position.
+
+I then decided to break it down my conference, to see what conferences produces what heights for volleyball players.
+
+\*Breaking it down by conference
+
+```{r}
+logs <- inner_join(NCAA_Volleyball_2023_2_, player_stats, by = "ncaa_id")
+
+```
+
+```{r}
+logs <- logs |> 
+  mutate(feet = as.numeric(feet), inches = as.numeric(inches)) |>
+  mutate(total_inches = (feet*12)+inches)  
+
+logs <- logs |> filter(total_inches > 1, gp > 20)
+```
+
+```{r}
+logs |> group_by(pos) |> summarise(count = n())
+
+logs <- logs |> mutate(newpos = case_when(grepl("DS", pos) ~ "DS",
+                                          grepl("L", pos) ~ "L",
+                                          grepl("L/DS", pos) ~ "DS"))
+
+```
+
+```{r}
+defslogs <- logs|> filter(newpos == newpos) |> group_by(team, digs, full_name, Conference) |> summarise(avg_heigt = total_inches) 
+```
+
+```{r}
+ggplot() + geom_point(data=defslogs, aes(x=avg_heigt, y=Conference)) + 
+  labs(
+    title="Height compared to the Conference")
+```
+
+The biggest takeaway from this chart is that power five schools have a higher average height for defensive players. Conferences like SEC and Big Ten don't usually take girls in the position of D.S. who are under 5'5. They do have some outliers, like two to three athletes under 5'5 but majority are over 5'5. This is not the case in the Conference of MEAC who average of defensive players start at 5'2. Bigger named schools take tallers girls in the defensive position however there is no actual connect to being taller and getting more passes.
+
+\*Filtering on Maryland's Data, Have the Terps had shorts passers who were good?
+
+```{r}
+mddata <- defslogs |> filter(team == "Maryland Terrapins, Terps") |> group_by(digs, avg_heigt, full_name) |> summarise(count=n())
+```
+
+```{r}
+ggplot() + geom_beeswarm(
+  data = defslogs, 
+  groupOnX = TRUE,
+  aes(x=avg_heigt, y=digs)
+) + geom_beeswarm(
+  data = mddata, 
+  groupOnX = TRUE,
+  aes(x=avg_heigt, y=digs, colour = "red")
+) + 
+  labs(
+    title="Height compared to Digs, UMD vs NCAA")
+```
+
+The Terps have had three athletes who are solely defensive players, they are 5'5 and over. However from the start this really shows you that height plays no factor in determining if someone can pass or not. The athlete Jonns Spohn who is 5'5 has 187 digs compared to Alex McGillivray who has 71 digs and is 5'8.
+
+|     |     |
+|-----|-----|
+|     |     |
+
+|     |     |
+|-----|-----|
+|     |     |

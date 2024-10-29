@@ -49,7 +49,7 @@ ggplot() + geom_point(data=avg_height, aes(x=avg_height, y=digs))
 This shows me that to pass in the sport of volleyball, you don't have to be tall. There is no significant pattern that shows height plays a factor on being able to pass, the data is all over the place. 
 
 
-### Testing the model
+### Testing the avg_height compared to digs for all schools
 ```{r}
 fit <- lm(digs ~ avg_height, data = avg_height)
 summary(fit)

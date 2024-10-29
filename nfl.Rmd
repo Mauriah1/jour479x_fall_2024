@@ -27,6 +27,6 @@ pbp_2023 |>
 #2024 
 ```{r}
 pbp_2024 |> 
-  filter(receiver == 'T.McLaurin', game_half == 'Half1', play_type == 'pass', week < 4, posteam == 'WAS' )
+  filter(homet )
 ```
 ### The post was correct that McLaurin had 6 catches in the first three games within the first half in 2022. In 2023 he had a slight improvement on touches, he had 12 catches within the first three games within the first half. This was a tad betteer but 12 catches from 3 games, is still not that great. Lastly, in 2024, Terry has caught 7 catches within the first half. This is showing me that he ultimately is not recieving the ball as much and is not doing as well as last season with his 12 catches. This is showing me that he needs the ball way more, if he is one of the highest paid receiver on the team he should be having more touches. 
