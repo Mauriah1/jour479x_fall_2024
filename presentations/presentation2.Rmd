@@ -6,7 +6,7 @@ if (!requireNamespace('pacman', quietly = TRUE)){
 pacman::p_load_current_gh("sportsdataverse/recruitR")
 ```
 
-For this notebook I will exploring my questions: Where do five star recruits usually come from? Which schools get the most five star recruits, and which ones don't? How do top ranked 5 stars play in their rookie season in the NFL? Also does a hot place like Floridia get more five stars than a cold place like Nebraska?
+For this notebook I will exploring my questions: Where do five star recruits usually come from? Which schools get the most five star recruits, and which ones don't? How do top ranked 5 stars play in their rookie season in college. Also does a hot place like Florida get more five stars than a cold place like Nebraska?
 
 I will be ranging my data from the five star recruits in the years 2020-2023. The only thing that is not in my data that I will need to figure out is how to get the data to show how the top recruits did in their rookie season.
 
@@ -19,42 +19,61 @@ library(ggplot2)
 library(tidyverse)
 library(maps)
 library(tidycensus)
+library(sf)
+library(ggthemes)
+```
+
+###load data 
+```{r}
+logs22 <- cfbd_recruiting_player(2020, recruit_type = 'HighSchool')
+
 ```
 
 ```{r}
 
-logs22 <- cfbd_recruiting_player(2020, recruit_type = 'HighSchool', state="MD")
+ census_api_key("f22effc123f29363710a1dc30b8649ced6732b8f", install = TRUE, overwrite=TRUE)
 
 
-```
-
-
-```{r}
 states <- get_acs(geography = "state", 
                   variables = c(totalpop = "B01003_001"), 
                   year = 2022)
 ```
 
+##create a dataframe for state abb and names 
+```{r}
+statedata <- tibble(NAME = state.name) |>
+   bind_cols(tibble(state_province = state.abb)) |>
+   bind_rows(tibble(NAME = "District of Columbia", state_province = "DC"))
+
+```
+
+##joining datafarmes 
+```{r}
+logs22 <- left_join(statedata, logs22, by = "state_province")
+
+logs22 <- logs22<- left_join(states, logs22, by = "NAME")
+```
+
+```{r}
+logs22 <- logs22 |> group_by(stars = '5', name,NAME ,school, committed_to,ranking, position,city, state_province, hometown_info_latitude, hometown_info_longitude, estimate) |> summarise(count=n())
+
+
+```
+
+
+##Creating five star data 
+```{r}
+fivestars22 <- logs22 |> group_by(NAME, estimate, hometown_info_latitude, hometown_info_longitude) |> summarise(count= n()) |> mutate(per_capita = count/estimate*100000)
+
+```
+
+District of Columbia, Alabama, Mississippi are the states that got the most five star recruits in 2022.
+
 ```{r}
 ```
 
 
-```{r}
-logs22 <- logs22 |> group_by(stars = '5', name, school, committed_to,ranking, position,city, state_province, hometown_info_latitude, hometown_info_longitude) |> summarise(count=n())
 
-```
-
-```{r}
-fivestars20 <- logs20 |> group_by(state_province) |> summarise(count= n())
-
-```
-
-
-```{r}
-ggplot(map
-```
-
-Texas, Florida and California get frequent five star recruits.
 
 
 Still need to: create code to show how top performers in these states did in their rookie seasons, 
