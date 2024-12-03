@@ -25,6 +25,7 @@ library(tidycensus)
 logs22 <- cfbd_recruiting_player(2020, recruit_type = 'HighSchool', state="MD")
 ```
 
+
 ```{r}
 states <- get_acs(geography = "state", 
                   variables = c(totalpop = "B01003_001"), 
