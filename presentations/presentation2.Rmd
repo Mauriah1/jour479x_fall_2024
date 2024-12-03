@@ -21,20 +21,14 @@ library(tidycensus)
 ```
 
 ```{r}
-recruitR::cfbd_recruiting_player
 
-logs20 <- cfbd_recruiting_player(2020, recruit_type = 'HighSchool')
-
-
+logs22 <- cfbd_recruiting_player(2020, recruit_type = 'HighSchool', state="MD")
 ```
 
 ```{r}
-states <- get_decennial(
-  geography = "states",
-  variables = c(totalpop = "P1_001N"),
-  year = 2020
-) |>
-  arrange(desc(value))
+states <- get_acs(geography = "state", 
+                  variables = c(totalpop = "B01003_001"), 
+                  year = 2022)
 ```
 
 ```{r}
@@ -42,13 +36,18 @@ states <- get_decennial(
 
 
 ```{r}
-logs20 <- logs20 |> group_by(stars = '5', name, school, committed_to,ranking, position,city, state_province, hometown_info_latitude, hometown_info_longitude) |> summarise(count=n())
+logs22 <- logs22 |> group_by(stars = '5', name, school, committed_to,ranking, position,city, state_province, hometown_info_latitude, hometown_info_longitude) |> summarise(count=n())
 
 ```
 
 ```{r}
 fivestars20 <- logs20 |> group_by(state_province) |> summarise(count= n())
 
+```
+
+
+```{r}
+ggplot(map
 ```
 
 Texas, Florida and California get frequent five star recruits.
