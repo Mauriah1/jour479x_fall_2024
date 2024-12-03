@@ -23,6 +23,8 @@ library(tidycensus)
 ```{r}
 
 logs22 <- cfbd_recruiting_player(2020, recruit_type = 'HighSchool', state="MD")
+
+
 ```
 
 
