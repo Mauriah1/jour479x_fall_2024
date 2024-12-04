@@ -23,9 +23,10 @@ library(sf)
 library(ggthemes)
 ```
 
-###load data 
+**loading keys:**
+
 ```{r}
-logs22 <- cfbd_recruiting_player(2020, recruit_type = 'HighSchool')
+logs22 <- cfbd_recruiting_player(2022, recruit_type = 'HighSchool')
 
 ```
 
@@ -39,7 +40,8 @@ states <- get_acs(geography = "state",
                   year = 2022)
 ```
 
-##create a dataframe for state abb and names 
+**Creating a data frame for state abbreviations and** **names:**
+
 ```{r}
 statedata <- tibble(NAME = state.name) |>
    bind_cols(tibble(state_province = state.abb)) |>
@@ -47,7 +49,8 @@ statedata <- tibble(NAME = state.name) |>
 
 ```
 
-##joining datafarmes 
+**Joining dataframes:**
+
 ```{r}
 logs22 <- left_join(statedata, logs22, by = "state_province")
 
@@ -55,29 +58,89 @@ logs22 <- logs22<- left_join(states, logs22, by = "NAME")
 ```
 
 ```{r}
-logs22 <- logs22 |> group_by(stars = '5', name,NAME ,school, committed_to,ranking, position,city, state_province, hometown_info_latitude, hometown_info_longitude, estimate) |> summarise(count=n())
+logs22 <- logs22 |> group_by(stars = '5', name,NAME ,school, committed_to,ranking, position,city, state_province, estimate) |> summarise(count=n())
 
 
 ```
 
-
-##Creating five star data 
-```{r}
-fivestars22 <- logs22 |> group_by(NAME, estimate, hometown_info_latitude, hometown_info_longitude) |> summarise(count= n()) |> mutate(per_capita = count/estimate*100000)
-
-```
-
-District of Columbia, Alabama, Mississippi are the states that got the most five star recruits in 2022.
+**Creating five star data:**
 
 ```{r}
+fivestars22 <- logs22 |> group_by(NAME, estimate) |> summarise(count= n()) |> mutate(per_capita = count/estimate*100000)
+
 ```
 
+```{r}
+write.csv(fivestars22, file = "fivestars_22.csv")
+```
 
+![](images/clipboard-3926982372.png)
 
+Alabama had a population around 5 million in 2022 and they had a total of 94 five start recruits, making their five star recruit rate 1.8. Georgia, on the other hand is in second for most five star recuirits in rates in 2022, they had 186 five stars with a population of nearly 10 million. In third place comes Mississippi with just 46 five stars with a population of nearly 3 million. Just because a state may be big does not necessarily mean that they are generating a lot of five star athletes. California has nearly a population of nearly 39 million and have 117 five stars, one may say "that's a lot of five stars", but their rate per 100,000 people was only 0.4, so did they really have that many five stars in 2022? not really for their population.
 
+**Creating data to show where the five star recruits went:**
 
-Still need to: create code to show how top performers in these states did in their rookie seasons, 
+```{r}
+newlog <- cfbd_recruiting_player(2022, recruit_type = 'HighSchool')|> na.omit()
+```
 
-Add a map graphic to show cold vs hot states, 
-Add a bar chart to show top states. 
-Add map graphic to show states number of recruits.
+```{r}
+newlog <- newlog |>group_by(stars = '5', committed_to)|>summarise(count=n()) 
+
+newlog <- newlog |> filter(count > 20)
+```
+
+```{r}
+ggplot() + 
+  geom_bar(
+    data=newlog, 
+    aes(x=reorder(committed_to, count),
+        weight=count)) + 
+  labs(
+    title="Where did Five Star Recruits go in 2022?",
+    subtitle = "Texas A&M dominated the scale in the 2022 season",
+    x="Scool", 
+    y="Recruits") + 
+  theme_minimal() + 
+  coord_flip() 
+```
+
+**Looking at the state of Maryland:**
+
+```{r}
+mdlogs22 <- cfbd_recruiting_player(2022, recruit_type = 'HighSchool', state = "MD") |> na.omit()
+
+mdlogs22 <- mdlogs22 |> group_by(stars = '5', city) |> summarise(count=n())
+
+write.csv(mdlogs22, file = "mdlogs.csv")
+```
+
+![](images/clipboard-1836224687.png)
+
+There were only 6 counties that produced five stars, these were: Montgomery County with 10 five stars, Baltimore City with 9 athletes, Prince George's County with 6, Anne Arundel with 4, Baltimore County with 3 and Frederick County with 1 athlete.
+
+**What positions were five stars in Maryland?**
+
+```{r}
+md22 <- cfbd_recruiting_player(2022, recruit_type = 'HighSchool', state = "MD") |> na.omit()
+
+md22 <- md22 |> group_by(stars = '5', position) |> summarise(count=n())
+```
+
+```{r}
+ggplot() + 
+  geom_bar(
+    data=md22, 
+    aes(x=reorder(position, count),
+        weight=count)) + 
+  labs(
+    title="Five Stars in Maryland by Position", 
+    x="Positions", 
+    y="Players") + 
+  theme_minimal() + 
+  coord_flip()
+```
+
+Maryland looks to be most known in 2022 for producing main stream Cornerbacks. Their defensive positions seem to overlook their offensive positions. in 2022 there more more defensive lineman than wide receivers who were five stars in this state.
+
+**Looking at Maryland five stars performance in freshman year of college:**
