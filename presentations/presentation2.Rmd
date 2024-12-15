@@ -6,9 +6,13 @@ if (!requireNamespace('pacman', quietly = TRUE)){
 pacman::p_load_current_gh("sportsdataverse/recruitR")
 ```
 
-For this notebook I will exploring my questions: Where do five star recruits usually come from? Which schools get the most five star recruits, and which ones don't? How do top ranked 5 stars play in their rookie season in college. Also does a hot place like Florida get more five stars than a cold place like Nebraska?
+This analysis aims to explore key questions about five-star high school football recruits: Where do these elite athletes typically come from? Which colleges attract the most five-star talent, and which schools fall short?
 
-I will be ranging my data from the five star recruits in the years 2020-2023. The only thing that is not in my data that I will need to figure out is how to get the data to show how the top recruits did in their rookie season.
+A special focus will be placed on Maryland, examining which counties produced the most five-star athletes in 2022 and identifying the positions for which the state is most recognized.
+
+The data highlights trends from the year 2022, though it does not include performance metrics for these athletes during their rookie college seasons. This approach provides a snapshot of high school talent pipelines and their connections to college football programs.
+
+Here's how I got my data:
 
 **loading data :**
 
@@ -72,11 +76,16 @@ fivestars22 <- logs22 |> group_by(NAME, estimate) |> summarise(count= n()) |> mu
 
 ```{r}
 write.csv(fivestars22, file = "fivestars_22.csv")
+view()
 ```
 
 ![](images/clipboard-3926982372.png)
 
-Alabama had a population around 5 million in 2022 and they had a total of 94 five start recruits, making their five star recruit rate 1.8. Georgia, on the other hand is in second for most five star recuirits in rates in 2022, they had 186 five stars with a population of nearly 10 million. In third place comes Mississippi with just 46 five stars with a population of nearly 3 million. Just because a state may be big does not necessarily mean that they are generating a lot of five star athletes. California has nearly a population of nearly 39 million and have 117 five stars, one may say "that's a lot of five stars", but their rate per 100,000 people was only 0.4, so did they really have that many five stars in 2022? not really for their population.
+The production of five-star high school football recruits varies significantly across states, according to an analysis of data from the year 2022. Despite having smaller populations, southern states like Alabama and Georgia lead the nation in five-star athlete production rates.
+
+In 2022, Alabama, with a population of around 5 million, produced 94 five-star recruits, resulting in a rate of 1.8 recruits per 100,000 residents. Georgia ranked second, generating 186 five-stars from its nearly 10 million residents, achieving a rate of 1.86 recruits per 100,000 people. Mississippi, despite having fewer total recruits (46), boasted a rate of 1.53 per 100,000 residents from its population of nearly 3 million.
+
+In contrast, populous states like California didn't generate five-star recruits at comparable rates. California, with almost 39 million residents, had 117 five-star recruits in 2022, translating to a modest rate of 0.4 per 100,000 residents. This discrepancy highlights that states with strong football traditions often outperform larger states in producing elite talent.
 
 **Creating data to show where the five star recruits went:**
 
@@ -105,6 +114,8 @@ ggplot() +
   coord_flip() 
 ```
 
+Colleges in the South dominate when it comes to signing five-star recruits. Programs like Texas A&M, Georgia, Vanderbilt, and Texas led the pack in 2022, securing many of the nation’s top players. These schools consistently attract elite talent due to their successful football programs, strong coaching staffs, and established recruiting pipelines.
+
 **Looking at the state of Maryland:**
 
 ```{r}
@@ -117,7 +128,7 @@ write.csv(mdlogs22, file = "mdlogs.csv")
 
 ![](images/clipboard-1836224687.png)
 
-There were only 6 counties that produced five stars, these were: Montgomery County with 10 five stars, Baltimore City with 9 athletes, Prince George's County with 6, Anne Arundel with 4, Baltimore County with 3 and Frederick County with 1 athlete.
+Focusing on Maryland, only six counties contributed five-star athletes from 2020 to 2023. Montgomery County led the way with 10 recruits, followed by Baltimore City with nine. Prince George’s County produced six, Anne Arundel four, Baltimore County three, and Frederick County one. Notably, cornerbacks and defensive linemen emerged as the most common positions for Maryland’s five-star recruits.
 
 **What positions were five stars in Maryland?**
 
@@ -141,6 +152,8 @@ ggplot() +
   coord_flip()
 ```
 
-Maryland looks to be most known in 2022 for producing main stream Cornerbacks. Their defensive positions seem to overlook their offensive positions. in 2022 there more more defensive lineman than wide receivers who were five stars in this state.
+Cornerbacks are the crown jewel of Maryland’s football pipeline in 2022, as the state gained recognition for producing top-tier talent in this position. Defensive players, in general, dominated the spotlight, with Maryland churning out more five-star defensive linemen than wide receivers, underscoring its reputation as a defensive stronghold.
 
-**Looking at Maryland five stars performance in freshman year of college:**
+The analysis shows that climate, population size, and football culture play crucial roles in producing five-star athletes. In 2022 warmer states like Florida and Texas continued to dominate, while colder states like Nebraska rarely make an impact. This disparity underscores the importance of regional traditions and investment in high school football.
+
+Looking ahead, a deeper dive into rookie-season performance could shed light on how well these recruits transition to the college level, offering further insights into the success of high school talent development.
